@@ -25,7 +25,7 @@ import javax.swing.event.MouseInputAdapter;
  *
  * @author iUser
  */
-public class Habitat extends Applet {
+public class Habitat extends JPanel {
     private Timer m_timer = new Timer();
     private boolean m_runViaFrame = false; 
     private double m_time = 0;
@@ -52,12 +52,27 @@ public class Habitat extends Applet {
     BufferedImage carpic = null; 
     Image offScreenImage = null;
     
-    private ArrayList<Velocity> lst; //ссылка на список объектов
+    ArrayList<Velocity> lst; //ссылка на список объектов
     //private boolean firstRUN = true; // перед стартом приложени€ (необходима дл€ устранени€ мерцани€)
     private boolean picLoaded=false; // проверка загрузки изображени€
     private String m_FileName1 = "motopic.png";
     private String m_FileName2 = "carpic.png";
     //private String PARAM_string_1 = "fileName";
+    
+    
+    private void initComponents() {
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
+    }// </editor-fold>   
     
 //==============================================================================
     private class Updater extends TimerTask {
@@ -97,7 +112,7 @@ public class Habitat extends Applet {
 //==============================================================================   
     public Habitat(){
         System.out.println("конструктор Habitat запущен");
-        
+        initComponents();
 //        try{
 //            mot = ImageIO.read(new File("./motopic.png"));
 //        }catch(IOException e){
@@ -147,22 +162,25 @@ public class Habitat extends Applet {
             
             switch(keycode){
                 case KeyEvent.VK_B: // запустить симул€цию
-                    System.out.println("B is pressed");
-                    emul_progress = true;
-                    repaint();
+                    /*System.out.println("B is pressed");*/
+                    /*emul_progress = true;*/
+                    /*repaint();*/
+                    start_sim();
                     break;
                 case KeyEvent.VK_E: //остановить симул€цию
-                    System.out.println("E is pressed");
+                    /*System.out.println("E is pressed");
                     emul_progress = false;
                     vel_shown = 0;
                     vel_count = 0;
                     lst.clear();
-                    repaint();
+                    repaint();*/
+                    stop_sim();
                     break;
                 case KeyEvent.VK_T:
-                    System.out.println("T is pressed");
+                    /*System.out.println("T is pressed");
                     showtime = !showtime;
-                    repaint();
+                    repaint();*/
+                    trig_timer();
                     break;
             }
             
@@ -171,6 +189,31 @@ public class Habitat extends Applet {
         this.addKeyListener(pk);
         Init();
         
+    }
+ //==============================================================================
+    public void start_sim(){ // запустить симул€цию
+        System.out.println("B is pressed");
+        emul_progress = true;
+        repaint();
+    }
+ //==============================================================================
+    public void stop_sim(){ // прекратить симул€цию
+        System.out.println("E is pressed");
+        emul_progress = false;
+        vel_shown = 0;
+        vel_count = 0;
+        lst.clear();
+        repaint();
+    }
+ //==============================================================================
+    public boolean pause_sim(){
+        return (emul_progress = !emul_progress); // вернуть состо€ние эмул€ции
+    }
+ //==============================================================================
+    public void trig_timer(){ // показать/скрыть таймер
+        System.out.println("T is pressed");
+        showtime = !showtime;
+        repaint();
     }
  //==============================================================================   
     public Habitat(boolean viaFrame){
@@ -279,7 +322,7 @@ public class Habitat extends Applet {
         if(/*picLoaded*/true){
            g.drawImage(offScreenImage, 0, 0, null); 
         }else{
-            showStatus("Loading image");
+            //showStatus("Loading image");
         }
         
         //--------
